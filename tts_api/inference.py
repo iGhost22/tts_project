@@ -25,6 +25,7 @@ class TTSModel:
         self.checkpoint_path = checkpoint_path
         self.result_dir = "result"
         self.output_file = "output.wav"
+        self.figure_file = "alignment_spec"  # Tên cố định cho file hình ảnh
         os.makedirs(self.result_dir, exist_ok=True)
         self.load_model()
 
@@ -46,6 +47,7 @@ class TTSModel:
         )
 
         self.model.load_state_dict(checkpoint["state_dict"])
+        # Tăng max_decoder_steps lên gấp đôi để xử lý văn bản dài tốt hơn
         self.model.decoder.max_decoder_steps = config.max_decoder_steps * 2
 
         if USE_CUDA:
@@ -66,6 +68,7 @@ class TTSModel:
             alignment: Ma trận alignment
             spectrogram: Spectrogram
         """
+        # Kiểm tra văn bản đầu vào
         if not text or not text.strip():
             raise ValueError("Văn bản đầu vào không được để trống")
 
@@ -75,11 +78,13 @@ class TTSModel:
         if USE_CUDA:
             sequence = sequence.cuda()
 
+        # Greedy decoding với attention cao hơn
         mel_outputs, linear_outputs, gate_outputs, alignments = self.model(sequence)
         linear_output = linear_outputs[0].cpu().data.numpy()
         spectrogram = audio._denormalize(linear_output)
         alignment = alignments[0].cpu().data.numpy()
 
+        # Chuyển spectrogram thành waveform với chất lượng cao
         waveform = audio.inv_spectrogram(linear_output.T)
 
         return waveform, alignment, spectrogram
@@ -99,6 +104,7 @@ class TTSModel:
         Returns:
             Path to the generated audio file
         """
+        # Always use the fixed output file
         output_path = os.path.join(self.result_dir, self.output_file)
         output_without_ext = (
             output_path.rsplit(".", 1)[0] if "." in output_path else output_path
@@ -108,15 +114,18 @@ class TTSModel:
         try:
             waveform, alignment, spectrogram = self.tts(text)
 
+            # Tạo hình ảnh visualization nếu yêu cầu
             if generate_figures:
-                figure_path = os.path.join(
-                    self.result_dir, f"figure_{int(time.time())}"
-                )
+                # Sử dụng tên file cố định cho hình ảnh thay vì dùng timestamp
+                figure_path = os.path.join(self.result_dir, self.figure_file)
                 test_visualize(alignment, spectrogram, figure_path)
+                print(f"Đã lưu hình ảnh: {figure_path}.png")
 
+            # Cải thiện chất lượng âm thanh
             if enhance_audio:
                 waveform = waveform * (0.95 / max(0.01, np.max(np.abs(waveform))))
 
+            # Lưu file với định dạng chất lượng cao (24-bit thay vì 16-bit)
             sf.write(
                 output_without_ext + ".wav",
                 waveform,
@@ -132,9 +141,12 @@ class TTSModel:
             raise
 
 
+# Initialize model with default settings
+# This can be imported and used in FastAPI app
 tts_model = TTSModel()
 
 
+# Function to be called from FastAPI
 def generate_speech(text, filename=None):
     """
     Generate speech from text and return the path to the audio file
