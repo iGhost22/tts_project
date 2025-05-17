@@ -2,6 +2,7 @@ services:
   - type: web
     name: tts-api
     env: python
+    plan: free
     buildCommand: pip install -r tts_api/requirements_render.txt
     startCommand: cd tts_api && uvicorn app:app --host 0.0.0.0 --port $PORT
     envVars:
@@ -10,4 +11,4 @@ services:
       - key: CHECKPOINT_PATH
         value: "/opt/render/project/src/ckpt/checkpoint_step500000.pth"
       - key: USE_CUDA
-        value: "0" 
+        value: "0"
