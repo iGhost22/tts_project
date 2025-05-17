@@ -3,8 +3,16 @@ services:
     name: tts-api
     env: python
     plan: free
-    buildCommand: pip install -r tts_api/requirements_render.txt
-    startCommand: cd tts_api && uvicorn app:app --host 0.0.0.0 --port $PORT
+    buildCommand: |
+      echo "Installing system dependencies..."
+      pip install -U pip setuptools wheel
+      echo "Installing NumPy with detailed logs..."
+      pip install numpy==1.24.3 -v
+      echo "Installing other dependencies..."
+      pip install -r tts_api/requirements_render.txt
+      echo "Verifying NumPy installation..."
+      python -c "import numpy as np; print(f'NumPy version: {np.__version__}'); print(f'NumPy test array: {np.array([1,2,3])}')"
+    startCommand: cd tts_api && python -c "import numpy as np; print(f'NumPy version: {np.__version__}')" && uvicorn app:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.11
@@ -12,3 +20,11 @@ services:
         value: "/opt/render/project/src/ckpt/checkpoint_step500000.pth"
       - key: USE_CUDA
         value: "0"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    buildFilter:
+      paths:
+      - tts_api/**
+      - ckpt/**
+      - model/**
+      - utils/**

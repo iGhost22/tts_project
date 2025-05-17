@@ -38,6 +38,10 @@ def text_to_speech(request: TextToSpeechRequest):
         # Chạy mô hình và lấy đường dẫn file
         audio_path = generate_speech(request.text)
 
+        # Kiểm tra xem file có tồn tại không
+        if not os.path.exists(audio_path):
+            raise Exception(f"Audio file not created at {audio_path}")
+
         # Trả về file
         return FileResponse(
             path=audio_path,
@@ -46,8 +50,16 @@ def text_to_speech(request: TextToSpeechRequest):
             content_disposition_type="inline",  # Cho phép nghe trực tiếp
         )
     except Exception as e:
+        error_message = str(e)
+        # Log lỗi chi tiết
+        import traceback
+        print(f"Error in /tts endpoint: {error_message}")
+        print(traceback.format_exc())
+        
+        # Trả về lỗi chi tiết hơn
         raise HTTPException(
-            status_code=500, detail=f"Error generating speech: {str(e)}"
+            status_code=500, 
+            detail=f"Error generating speech: {error_message}"
         )
 
 
