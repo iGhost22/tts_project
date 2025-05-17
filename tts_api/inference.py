@@ -16,16 +16,16 @@ from utils.plot import test_visualize
 from model.tacotron import Tacotron
 from config import config
 
-# Kiểm tra xem CUDA có sẵn không và có nên sử dụng không
-USE_CUDA = torch.cuda.is_available() and os.environ.get("USE_CUDA", "0") == "1"
-print(f"CUDA available: {torch.cuda.is_available()}, USE_CUDA set to: {USE_CUDA}")
+# Vô hiệu hóa CUDA để đảm bảo chạy trên CPU
+USE_CUDA = False
+print(f"Running in CPU-only mode (CUDA disabled)")
 
 
 class TTSModel:
     def __init__(self, checkpoint_path=None):
         self.model = None
         # Default checkpoint path, can be overridden by environment variable
-        self.checkpoint_path = checkpoint_path or os.environ.get("CHECKPOINT_PATH", "../ckpt/checkpoint_step500000.pth")
+        self.checkpoint_path = checkpoint_path or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ckpt", "checkpoint_step500000.pth")
         self.result_dir = "result"
         self.output_file = "output.wav"
         self.figure_file = "alignment_spec"  # Tên cố định cho file hình ảnh
@@ -53,9 +53,8 @@ class TTSModel:
         # Tăng max_decoder_steps lên gấp đôi để xử lý văn bản dài tốt hơn
         self.model.decoder.max_decoder_steps = config.max_decoder_steps * 2
 
-        if USE_CUDA:
-            self.model = self.model.cuda()
-
+        # Không bao giờ sử dụng CUDA để tránh lỗi
+        self.model = self.model.cpu()
         self.model.encoder.eval()
         self.model.postnet.eval()
 
@@ -77,9 +76,6 @@ class TTSModel:
 
         sequence = np.array(text_to_sequence(text))
         sequence = Variable(torch.from_numpy(sequence)).unsqueeze(0)
-
-        if USE_CUDA:
-            sequence = sequence.cuda()
 
         # Greedy decoding với attention cao hơn
         mel_outputs, linear_outputs, gate_outputs, alignments = self.model(sequence)
