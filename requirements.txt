@@ -16,3 +16,5 @@ unidecode
 inflect
 nltk
 soundfile
+fastapi
+uvicorn
