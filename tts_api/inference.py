@@ -16,13 +16,16 @@ from utils.plot import test_visualize
 from model.tacotron import Tacotron
 from config import config
 
-USE_CUDA = torch.cuda.is_available()
+# Kiểm tra xem CUDA có sẵn không và có nên sử dụng không
+USE_CUDA = torch.cuda.is_available() and os.environ.get("USE_CUDA", "0") == "1"
+print(f"CUDA available: {torch.cuda.is_available()}, USE_CUDA set to: {USE_CUDA}")
 
 
 class TTSModel:
-    def __init__(self, checkpoint_path="../ckpt/checkpoint_step500000.pth"):
+    def __init__(self, checkpoint_path=None):
         self.model = None
-        self.checkpoint_path = checkpoint_path
+        # Default checkpoint path, can be overridden by environment variable
+        self.checkpoint_path = checkpoint_path or os.environ.get("CHECKPOINT_PATH", "../ckpt/checkpoint_step500000.pth")
         self.result_dir = "result"
         self.output_file = "output.wav"
         self.figure_file = "alignment_spec"  # Tên cố định cho file hình ảnh

@@ -1,6 +1,9 @@
 ckpt/
 venv/
 data/
+result/
+tts_api/result/
 __pycache__/
 *.py[cod]
 .DS_Store
+requirements.txt
