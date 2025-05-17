@@ -3,13 +3,12 @@ uvicorn
 librosa
 matplotlib
 nnmnkwii
-numpy==1.22.4
+numpy
 scipy
 tensorboardX
-torch==1.13.1+cpu
-torchaudio==0.13.1+cpu
-torchvision==0.14.1+cpu
---extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.1.0
+torchaudio==2.1.0
+torchvision==0.16.0
 tqdm
 unidecode
 inflect
