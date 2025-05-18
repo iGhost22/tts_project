@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  tts-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - CHECKPOINT_PATH=/app/ckpt/checkpoint_step500000.pth
+      - USE_CUDA=0
+    volumes:
+      - ./result:/app/result
+    restart: unless-stopped 

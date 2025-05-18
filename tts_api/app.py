@@ -4,6 +4,7 @@ import os
 import sys
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uuid
 
@@ -16,6 +17,15 @@ app = FastAPI(
     description="API for text-to-speech using Tacotron",
 )
 
+# Cấu hình CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cho phép tất cả origins (trong môi trường sản phẩm nên giới hạn)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Đường dẫn cố định đến file âm thanh
 AUDIO_FILE_PATH = os.path.join("result", "output.wav")
 
@@ -24,9 +34,12 @@ class TextToSpeechRequest(BaseModel):
     text: str
 
 
-# @app.get("/")
-# def read_root():
-#     return {"message": "Text-to-Speech API"}
+@app.get("/")
+def read_root():
+    """
+    Root endpoint to check API status
+    """
+    return {"status": "online", "message": "Text-to-Speech API is running"}
 
 
 @app.post("/tts")

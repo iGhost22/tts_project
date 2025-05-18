@@ -1,0 +1,39 @@
+# Git
+.git
+.gitignore
+
+# Môi trường ảo Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Thư mục dữ liệu huấn luyện
+data/
+
+# Thư mục nhật ký và checkpoints không cần thiết
+log/
+ckpt/*
+!ckpt/checkpoint_step500000.pth
+
+# Các file khác
+result/
+*.log
+*.wav 

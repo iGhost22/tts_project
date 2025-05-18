@@ -8,10 +8,14 @@ services:
       pip install -U pip setuptools wheel
       echo "Installing NumPy with detailed logs..."
       pip install numpy==1.24.3 -v
+      echo "Installing PyTorch CPU only..."
+      pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2 --index-url https://download.pytorch.org/whl/cpu
       echo "Installing other dependencies..."
       pip install -r tts_api/requirements_render.txt
       echo "Verifying NumPy installation..."
       python -c "import numpy as np; print(f'NumPy version: {np.__version__}'); print(f'NumPy test array: {np.array([1,2,3])}')"
+      echo "Creating required directories..."
+      mkdir -p result
     startCommand: cd tts_api && python -c "import numpy as np; print(f'NumPy version: {np.__version__}')" && uvicorn app:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
@@ -25,6 +29,7 @@ services:
     buildFilter:
       paths:
       - tts_api/**
-      - ckpt/**
+      - ckpt/checkpoint_step500000.pth  # Only include the most recent checkpoint
       - model/**
       - utils/**
+      - config.py
