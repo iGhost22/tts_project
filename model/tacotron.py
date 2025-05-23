@@ -212,7 +212,7 @@ class Decoder(nn.Module):
 		
 		self.attention = attention
 		if self.attention == 'Bahdanau':
-			self.attention_rnn = AttentionRNNh(nn.GRUCell(256 + 128, 256), 
+			self.attention_rnn = AttentionRNN(nn.GRUCell(256 + 128, 256), 
 											   BahdanauAttention(256), 
 											   attention='Bahdanau')
 		elif self.attention == 'LocationSensitive':
