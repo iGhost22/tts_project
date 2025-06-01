@@ -11,3 +11,4 @@ __pycache__/
 requirements.txt
 macbook_tts_project
 macbook_tts_project.pub
+ground_truth_audio/

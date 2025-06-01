@@ -93,8 +93,6 @@ def get_preprocess_args():
 	parser = argparse.ArgumentParser(description='preprocess arguments')
 
 	parser.add_argument('--mode', choices=['make', 'analyze', 'all'], default='all', help='what to preprocess')
-	parser.add_argument('--num_workers', type=int, default=cpu_count(), help='multi-thread processing')
-	parser.add_argument('--file_suffix', type=str, default='wav', help='audio filename extension')
 
 	meta_path = parser.add_argument_group('meta_path')
 	meta_path.add_argument('--meta_dir', type=str, default='./data/meta/', help='path to the model-ready training acoustic features')
