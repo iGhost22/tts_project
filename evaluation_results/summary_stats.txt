@@ -1,0 +1,38 @@
+Thống kê tổng hợp:
+
+
+mcd:
+  mean: 7.1977
+  std: 1.1080
+  min: 5.4230
+  max: 14.3762
+
+f0_rmse:
+  mean: 0.3542
+  std: 0.0612
+  min: 0.2043
+  max: 0.5506
+
+utmos:
+  mean: 1.3509
+  std: 0.0596
+  min: 1.2319
+  max: 1.7551
+
+bert_precision:
+  mean: 0.8410
+  std: 0.0954
+  min: 0.3427
+  max: 0.9042
+
+bert_recall:
+  mean: 0.8444
+  std: 0.0848
+  min: 0.2776
+  max: 0.9077
+
+bert_f1:
+  mean: 0.8422
+  std: 0.0902
+  min: 0.3067
+  max: 0.9046
