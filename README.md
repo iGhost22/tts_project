@@ -4,6 +4,7 @@ A Text-to-Speech project using Tacotron model to convert text into natural speec
 
 ## 📋 Table of Contents
 
+- [Demo](#-demo)
 - [System Requirements](#-system-requirements)
 - [Installation](#-installation)
 - [Data Preparation](#-data-preparation)
@@ -13,6 +14,19 @@ A Text-to-Speech project using Tacotron model to convert text into natural speec
 - [Model Evaluation](#-model-evaluation)
 - [Project Structure](#-project-structure)
 - [Configuration](#-configuration)
+
+## 🎵 Demo
+
+Explore our Text-to-Speech project through comprehensive demonstrations and documentation:
+
+### 📋 Project Report
+Access the complete thesis report and technical documentation:
+- **Thesis Report**: [📄 Full research documentation](https://drive.google.com/file/d/1WL36MKCzDwwJ7Wselvcy_ll7LsBPz4-N/view)
+
+### 🎬 Google Drive Demonstrations
+Watch detailed demonstrations of the TTS system in action:
+- **Demo Videos**: [📁 Google Drive demonstrations folder](https://drive.google.com/drive/folders/1WduADe8MMtqWW-3eXy1phVqTwHNFMU62)
+
 
 ## 🔧 System Requirements
 
@@ -99,19 +113,13 @@ python preprocess.py --mode all --meta_dir ./data/meta --meta_text meta_text.txt
 ### 1. Basic training
 
 ```bash
-python train.py --data_root ./data/meta --meta_text meta_text.txt --ckpt_dir ./ckpt
+python train.py --ckpt_dir ckpt/ --log_dir log/
 ```
 
-### 2. Training with TensorBoard logging
+### 2. Resume training from checkpoint
 
 ```bash
-python train.py --data_root ./data/meta --meta_text meta_text.txt --ckpt_dir ./ckpt --log_dir ./log --log_comment "experiment_1"
-```
-
-### 3. Resume training from checkpoint
-
-```bash
-python train.py --data_root ./data/meta --meta_text meta_text.txt --ckpt_dir ./ckpt --model_name checkpoint_step50000.pth
+python train.py --ckpt_dir ckpt/ --log_dir log/ --model_name 500000
 ```
 
 **Training parameters:**
@@ -122,26 +130,18 @@ python train.py --data_root ./data/meta --meta_text meta_text.txt --ckpt_dir ./c
 - `--log_dir`: Log directory for TensorBoard
 - `--log_comment`: Comment for logs
 
-### 4. Monitor training progress
-
-```bash
-tensorboard --logdir=./log
-```
-
-Access `http://localhost:6006` to view dashboard.
-
 ## 🎯 Using the Model
 
 ### 1. Synthesize speech from text
 
 ```bash
-python test.py --text "Hello, this is a speech synthesis system." --model_name checkpoint_step200000.pth --result_dir ./result
+python test.py --text "Hello, this is a speech synthesis system." --model_name checkpoint_step500000.pth --result_dir ./result
 ```
 
 ### 2. Batch synthesis
 
 ```bash
-python test.py --text_file input_texts.txt --model_name checkpoint_step200000.pth --result_dir ./result
+python test.py --text_file input_texts.txt --model_name checkpoint_step500000.pth --result_dir ./result
 ```
 
 **Parameters:**
