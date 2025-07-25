@@ -189,7 +189,7 @@ Access `http://localhost:8000/docs` to view Swagger documentation.
 ### 1. Evaluation with automatic metrics
 
 ```bash
-python evaluate.py --ground_truth_dir ./ground_truth_audio --generated_dir ./result
+python evaluate.py
 ```
 
 **Evaluated metrics:**
@@ -198,18 +198,6 @@ python evaluate.py --ground_truth_dir ./ground_truth_audio --generated_dir ./res
 - **LogF0RMSE**: Measures fundamental frequency error
 - **UTMOS**: Overall quality assessment
 - **SpeechBERTScore**: Semantic similarity evaluation
-
-### 2. Quick evaluation
-
-```bash
-python test_fast.py --model_name checkpoint_step200000.pth
-```
-
-### 3. SpeechBERTScore evaluation
-
-```bash
-python test_speechbertscore.py --ground_truth_dir ./ground_truth_audio --generated_dir ./result
-```
 
 ## 📁 Project Structure
 
